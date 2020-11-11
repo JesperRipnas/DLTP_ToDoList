@@ -1,0 +1,131 @@
+﻿/* FAS 2. Uppgift 1 - Att-göra-lista
+
+   Ändamål: gör ett att-göra-liste-program. Det skall
+      kunna användas för att lägga in att-göra-uppgifter,
+      som sedan betas av och tas bort, när de är klara.
+      Att-göra-listan lagrar sina data på filer.
+
+   Specifikation:
+      
+      1. Programmet skrivs med .NET Framework.
+      
+      2. Att-göra-listan mellanlagras på slät textfil när
+         programmet inte körs, man skall kunna ladda olika
+         textfiler för olika projekts att-göra-listor.
+         
+      3. Man jobbar bara med en att-göra-lista åt gången.
+      
+      4. Programmet är ett kommandoradssprogram med mellan-
+         slag som separator, så när man laddar en lista
+         så skriver man exempelvis:
+         
+            > load C:\Users\tomas\todo.lis
+            
+         under förutsättning att det ligger en att-göra-
+         liste-fil todo.lis på C:\Users\tomas\.
+
+      5. Följande kommandon skall finnas:
+      
+         quit - avsluta programmet, och om det finns någon
+                fil som ändrats fråga användaren om
+                ändringarna skall sparas först
+
+         load /filename/ - laddar en att-göra-lista från
+                fil, om man arbetat med en annan fil som
+                ändrats: fråga användaren om ändringarna
+                skall sparas först
+
+         save - sparar nuvarande att-göra-lista
+         
+         save /filename/ - sparar nuvarande att-göra-lista
+                på ett nytt filnamn, och sätter denna
+                att-göra-lista till nuvarande
+
+      6. Listan skall presenteras så här:
+      
+         N  datum  S rubrik
+         -------------------------------------------
+         1:   --   v Handla smörgåsmat på Willys
+         2: 201111 v Fika hos Lisa och Lasse
+         3: 201110 * Köpa blommor och vin
+         -------------------------------------------
+         
+         osv.
+         
+         Uppgifterna presenteras alltså med 
+         
+           a. tider, om "  --  " menar man ingen
+              särskild tid,
+              
+           b. en status, som anges med v (väntar),
+              * (klar), P (pågående),
+              
+           c. en rubrik
+
+      6b. Skapa ett kommando visa, som ritar upp en tabell
+          såsom i uppgift 6a.
+          
+              > visa
+              N  datum  S rubrik
+              -------------------------------------------
+              1:   --   v Handla smörgåsmat på Willys
+              2: 201111 v Fika hos Lisa och Lasse
+              3: 201110 * Köpa blommor och vin
+              -------------------------------------------
+              > 
+
+      7. 1: 2: 3: osv. anger löpnummer - man skall kunna
+         flytta upp och flytta ner en att-göra-uppgift med 
+         hjälp av kommandot
+         
+         move /siffra/ [up/down], t.ex.
+
+            > move 3 up
+         
+            > move 2 down
+         
+      8. Man skall kunna ta bort uppgifter med hjälp av
+         
+         delete /num/, t.ex. 
+         
+            > delete 3
+         
+      9. Man skall kunna sätta in nya uppgifter med hjälp av
+         
+         add /tid/ /rubrik/, t.ex.
+         
+            > add 201113 Fest med gänget
+
+         eller 
+
+         add -- /rubrik/
+         
+            > add -- Putsa skorna
+
+         vilket ger obestämd tid
+         
+      10. Man skall kunna sätta att en uppgift är avklarad
+          med hjälp av
+          
+          set /num/ /status/, t.ex.
+          
+             > set 2 avklarad
+             
+             > set 3 pågående
+        
+          där vi har statusarna "avklarad", "väntande" och
+          "pågående".
+
+      11. Förändra kommandot visa, så att klara uppgifter
+          INTE visas
+          
+      12. Utvidga kommandot visa, så att klara uppgifter
+          visas om man anger
+          
+              > visa klara
+              
+          Se även till att det finns en variant där
+          
+              > visa allt
+         
+          visar alla uppgifter, oavsett status. */
