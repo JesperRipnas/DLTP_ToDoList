@@ -1,3 +1,3 @@
-201109#v#Handla öl
-201111#v#köpa korv
-201109#v#Handla bröd
+201111#W#köpa korv
+201109#*#Handla bröd
+201109#W#Handla öl

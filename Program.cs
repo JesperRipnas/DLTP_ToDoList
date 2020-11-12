@@ -1,6 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Net;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading;
+
 
 namespace ToDoList
 {
@@ -20,7 +26,6 @@ namespace ToDoList
         static void Main(string[] args)
         {
             bool quit = false;
-            //ReadDefaultFile();
             string filePath = "";
             Console.WriteLine("ToDoList 2020");
             do
@@ -48,7 +53,7 @@ namespace ToDoList
                         }
                         PrintCurrentFile();
                         break;
-                    case "list":
+                    case "show":
                         PrintCurrentFile();
                         break;
                     case "add":
@@ -60,8 +65,18 @@ namespace ToDoList
                     case "move":
                         MoveActivity(words);
                         break;
+                    case "set":
+                        SetActivityStatus(words);
+                        break;
                     case "save":
-                        SaveToFile(filePath);
+                        if (words.Length == 1)
+                        {
+                            SaveToFile(filePath);
+                        }
+                        else
+                        {
+                            SaveNewFile(words);
+                        }
                         break;
                     case "quit":
                         Console.WriteLine("Goodbye");
@@ -73,6 +88,27 @@ namespace ToDoList
                         break;
                 }
             } while (!quit);
+        }
+        static void SetActivityStatus(string[] words)
+        {
+            int index = Convert.ToInt32(words[1]) - 1;
+            string newStatus = words[2];
+            switch (newStatus)
+            {
+                case "done":
+                    ToDoLists[index].status = "*";
+                    break;
+                case "wip": // Work in progress
+                    ToDoLists[index].status = "W";
+                    break;
+                case "hold":
+                    ToDoLists[index].status = "H";
+                    break;
+                default:
+                    Console.WriteLine("Incorrect input");
+                    break;
+            }
+            PrintCurrentFile();
         }
         static void MoveActivity(string[] words)
         {
@@ -103,6 +139,21 @@ namespace ToDoList
             PrintCurrentFile();
             Console.WriteLine("If you want to save file, type 'save'");
         }
+        static string SaveNewFile(string[] words)
+        {
+            string folderRoot = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"..\..\data\");
+            string newFileName = words[1];
+            string fileType = ".txt";
+            string pathString = Path.Combine(folderRoot, newFileName) + fileType;
+            var newFile = File.Create(pathString);
+            newFile.Close();
+            Console.WriteLine($"{pathString} has been created!");
+            foreach (Activity i in ToDoLists)
+            {
+                File.AppendAllText(pathString, $"{i.date}#{i.status}#{i.log}\n");
+            }
+            return pathString;
+        }
         static void SaveToFile(string filePath)
         {
             Console.WriteLine("Are you sure you want to save (y/n)");
@@ -120,6 +171,7 @@ namespace ToDoList
                 System.Threading.Thread.Sleep(1000);
                 Console.ResetColor();
                 Console.Clear();
+                PrintCurrentFile();
             }
             else
             {
@@ -128,7 +180,7 @@ namespace ToDoList
         }
         static void AddToList(string[] words, string userInput)
         {
-            string defaultStatus = "v";
+            string defaultStatus = "H";
             int startIndex = 11;
             int endIndex = userInput.Length - 11;
             string message = userInput.Substring(startIndex, endIndex);
@@ -148,24 +200,19 @@ namespace ToDoList
                 Console.WriteLine($"{rowCount}: {ToDoLists[i].date} {ToDoLists[i].status} {ToDoLists[i].log}");
                 rowCount++;
             }
-            Console.WriteLine();
+            Console.WriteLine("\nH - On hold");
+            Console.WriteLine("W - Work in progress");
+            Console.WriteLine("* - Done\n");
         }
         static void HelpMenu()
         {
-            Console.WriteLine("list - Show activities in current file");
-            Console.WriteLine("load [path] - Load file");
-            Console.WriteLine("quit - End program");
-        }
-        static void ReadDefaultFile()
-        {
-            string DefaultfilePath = @"C:\Skola\Kod\c#\ToDoList\data\default.txt";
-            string[] fileText = File.ReadAllLines(DefaultfilePath);
-            foreach (string row in fileText)
-            {
-                string[] splittedRoW = row.Split('#');
-                Activity N = new Activity(splittedRoW[0], splittedRoW[1], splittedRoW[2]);
-                ToDoLists.Add(N);
-            }
+            Console.WriteLine("\nshow - Show activities in current file");
+            Console.WriteLine("add [date] [headline] - Add new activity to current list");
+            Console.WriteLine("delete [number] - Delete activity from current list");
+            Console.WriteLine("move [number] up/down - Move acitivy up or down in the list");
+            Console.WriteLine("load [path] - Load file from specific path");
+            Console.WriteLine("save - Save current list to file");
+            Console.WriteLine("quit - End program\n");
         }
     }
 }
